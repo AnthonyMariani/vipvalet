@@ -38,11 +38,20 @@ $weeks = generateWeeks($recentWednesday, 10); // Generates the next 10 weeks
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="global.css">
     <link rel="icon" href="images/logo.png" type="image/png">
-
+    <style>
+        body {
+            margin-top: 80px; /* Adjust margin to avoid overlap with fixed navbar */
+        }
+    </style>
 </head>
 <body>
     <!-- Include the Navbar -->
     <?php include 'navbar.php'; ?>
+
+    <!-- Back to Home Button -->
+    <div class="container mt-5">
+        <a href="index.php" class="btn btn-secondary mb-3">&larr; Back to Home</a>
+    </div>
 
     <div class="container mt-5">
         <h1 class="text-center">Admin Dashboard</h1>
@@ -70,13 +79,13 @@ $weeks = generateWeeks($recentWednesday, 10); // Generates the next 10 weeks
                 </div>
             </div>
 
-            <!-- Additional Admin Options -->
+            <!-- Manage Schedule Option -->
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Manage Users</h5>
-                        <p class="card-text">View and manage user accounts.</p>
-                        <a href="manage_users.php" class="btn btn-secondary">Go to User Management</a>
+                        <h5 class="card-title">Manage Schedule</h5>
+                        <p class="card-text">View and manage the weekly schedule for events.</p>
+                        <a href="manage_schedule.php" class="btn btn-secondary">Go to Manage Schedule</a>
                     </div>
                 </div>
             </div>

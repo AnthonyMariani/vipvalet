@@ -149,15 +149,22 @@ $weeklyEvents = getWeeklyEvents($currentDate);
     </style>
 </head>
 <body>
-<div class="container container-schedule mt-3">
-    <h1 class="text-center">Manage Weekly Schedule</h1>
 
-    <!-- Navigation for weeks -->
-    <div class="navigation-buttons mb-3">
-        <button class="btn btn-primary me-2" onclick="navigateWeek(-1)">Previous Week</button>
-        <button class="btn btn-primary" onclick="navigateWeek(1)">Next Week</button>
-        <button class="btn btn-success" onclick="saveAllEvents()">Save All Changes</button>
-    </div>
+    <div class="container container-schedule mt-3">
+        <div class="container mt-5">
+            <div class="d-flex justify-content-center align-items-center">
+
+                <!-- Navigation -->
+                <div class="navigation-buttons">
+                    <a href="admin.php" class="btn btn-secondary me-3">&larr; Back to Admin Dashboard</a>
+                    <button class="btn btn-primary me-2" onclick="navigateWeek(-1)">Previous Week</button>
+                    <button class="btn btn-primary me-2" onclick="navigateWeek(1)">Next Week</button>
+                    <button class="btn btn-success" onclick="saveAllEvents()">Save All Changes</button>
+                </div>
+            </div>
+        </div>
+
+        <h1 class="text-center mt-4">Manage Weekly Schedule</h1>
 
     <!-- Schedule Wrapper for the grid -->
     <div class="schedule-wrapper">

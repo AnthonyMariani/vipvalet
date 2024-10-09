@@ -72,6 +72,12 @@ $conn->close();
     </div>
 </nav>
 
+<!-- Back Button -->
+<div class="container mt-3">
+    <a href="index.php" class="btn btn-secondary">&larr; Back to Home</a>
+</div>
+
+
 <div class="container">
     <h1>Submit Your Availability</h1>
     <div id='calendar'></div>

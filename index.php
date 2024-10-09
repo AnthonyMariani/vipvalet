@@ -15,7 +15,12 @@ $is_admin = $logged_in && isset($_SESSION['role']) && $_SESSION['role'] === 'adm
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="global.css">
     <link rel="icon" href="images/logo.png" type="image/png">
-
+    <style>
+        /* Add padding to prevent overlap with fixed navbar */
+        body {
+            padding-top: 70px; /* Adjust this value as needed to accommodate the height of your navbar */
+        }
+    </style>
 </head>
 <body>
     <!-- Include the Navbar -->
@@ -61,9 +66,8 @@ $is_admin = $logged_in && isset($_SESSION['role']) && $_SESSION['role'] === 'adm
     </div>
 
     <div class="text-center mt-5">
-    <img src="images/logo.png" alt="VIP Valet Logo" style="max-width: 150px;">
+        <img src="images/logo.png" alt="VIP Valet Logo" style="max-width: 150px;">
     </div>
-
 
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
