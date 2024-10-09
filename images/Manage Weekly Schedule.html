@@ -1,0 +1,312 @@
+
+<!-- saved from url=(0046)http://localhost/vip-valet/manage_schedule.php -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body><nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="http://localhost/vip-valet/index.php" style="text-decoration: none;">VIP Valet</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                                    <li class="nav-item">
+                        <a class="nav-link" href="http://localhost/vip-valet/logout.php">Logout</a>
+                    </li>
+                            </ul>
+        </div>
+    </div>
+</nav>
+
+
+
+
+
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Weekly Schedule</title>
+    <link href="./Manage Weekly Schedule_files/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./Manage Weekly Schedule_files/jquery-ui.css">
+    <script src="./Manage Weekly Schedule_files/jquery-3.6.0.min.js.download"></script>
+    <script src="./Manage Weekly Schedule_files/jquery-ui.min.js.download"></script>
+
+    <style>
+    body {
+        margin-top: 70px; /* Adjust margin to avoid overlap with fixed navbar */
+    }
+    .container-schedule {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 70px); /* Adjust height to fill the screen, accounting for navbar */
+        overflow: hidden; /* Prevent vertical scrolling */
+    }
+    .navigation-buttons {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    .schedule-wrapper {
+        flex: 2; /* Take 2/3 of the remaining height */
+        overflow-x: auto;
+        overflow-y: hidden; /* Prevent vertical scrolling in the schedule section */
+    }
+    .schedule-container {
+        display: grid;
+        grid-template-columns: repeat(7, 300px); /* Wider columns for better visibility */
+        gap: 20px;
+        margin-top: 20px;
+    }
+    .day-column {
+        background-color: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #dee2e6;
+    }
+    .day-header {
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .event-card {
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 15px;
+        cursor: pointer;
+    }
+    .highlighted-event {
+        border: 2px solid yellow; /* Highlight selected event */
+    }
+    .staff-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+    .staff-row input.start-time {
+        width: 30%; /* Start Time input takes 1/3 of the row */
+        margin-right: 10px;
+    }
+    .staff-row input.employee-name {
+        width: 65%; /* Employee Name input takes 2/3 of the row */
+    }
+    .event-footer {
+        margin-top: 10px;
+        text-align: center;
+    }
+    .event-footer button {
+        margin: 0 5px;
+    }
+    .guest-row input {
+        border: 2px solid red;
+    }
+    .available-employees {
+        flex: 1; /* Take 1/3 of the remaining height */
+        background-color: #f1f1f1;
+        padding: 15px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        overflow: auto; /* Allow vertical scrolling for available employees */
+    }
+    .employee-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+    }
+    .employee-box {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+    }
+</style>
+
+
+
+<div class="container container-schedule mt-3">
+    <h1 class="text-center">Manage Weekly Schedule</h1>
+
+    <!-- Navigation for weeks -->
+    <div class="navigation-buttons mb-3">
+        <button class="btn btn-primary me-2" onclick="navigateWeek(-1)">Previous Week</button>
+        <button class="btn btn-primary" onclick="navigateWeek(1)">Next Week</button>
+    </div>
+
+    <!-- Schedule Wrapper for the grid -->
+    <div class="schedule-wrapper">
+        <div class="schedule-container">
+            <div class="day-column"><div class="day-header">Wednesday 10/2</div><div class="event-card" id="event-37" onclick="highlightEvent(37, &quot;2024-10-02&quot;)" data-event-color="#FF5733" style="border-color: rgb(255, 87, 51); border-width: 6px;"><strong>Client:</strong> Theater On The Lake<br><strong>Location:</strong> 101 W Fullerton Ave. Chicago, IL<br><div class="staff-rows" id="staff-rows-37"><div class="staff-row" id="staff-row-37-0"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-37-1"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-37-2"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-37-3"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-37-4"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div></div><div class="event-footer"><button class="btn btn-primary btn-sm" onclick="addEmployee(37)">Add</button><button class="btn btn-danger btn-sm" onclick="deleteEmployee(37)">Delete</button><button class="btn btn-success btn-sm" onclick="saveEvent(37)">Save</button></div><span class="event-checkmark" style="position: absolute; bottom: 5px; right: 5px; font-size: 20px; color: green; display: none;">✓</span></div></div><div class="day-column"><div class="day-header">Thursday 10/3</div><div class="event-card" id="event-40" onclick="highlightEvent(40, &quot;2024-10-03&quot;)" data-event-color="#33FF57" style="border-color: rgb(51, 255, 87); border-width: 6px;"><strong>Client:</strong> Theater On The Lake<br><strong>Location:</strong> 101 W Fullerton Ave. Chicago, IL<br><div class="staff-rows" id="staff-rows-40"><div class="staff-row" id="staff-row-40-0"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-40-1"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-40-2"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-40-3"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-40-4"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div></div><div class="event-footer"><button class="btn btn-primary btn-sm" onclick="addEmployee(40)">Add</button><button class="btn btn-danger btn-sm" onclick="deleteEmployee(40)">Delete</button><button class="btn btn-success btn-sm" onclick="saveEvent(40)">Save</button></div><span class="event-checkmark" style="position: absolute; bottom: 5px; right: 5px; font-size: 20px; color: green; display: none;">✓</span></div></div><div class="day-column"><div class="day-header">Friday 10/4</div><div class="event-card" id="event-41" onclick="highlightEvent(41, &quot;2024-10-04&quot;)" data-event-color="#3357FF" style="border-color: rgb(51, 87, 255); border-width: 6px;"><strong>Client:</strong> Theater On The Lake<br><strong>Location:</strong> 101 W Fullerton Ave. Chicago, IL<br><div class="staff-rows" id="staff-rows-41"><div class="staff-row" id="staff-row-41-0"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-41-1"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-41-2"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-41-3"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-41-4"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-41-5"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-41-6"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-41-7"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-41-8"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-41-9"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-41-10"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-41-11"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-41-12"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div></div><div class="event-footer"><button class="btn btn-primary btn-sm" onclick="addEmployee(41)">Add</button><button class="btn btn-danger btn-sm" onclick="deleteEmployee(41)">Delete</button><button class="btn btn-success btn-sm" onclick="saveEvent(41)">Save</button></div><span class="event-checkmark" style="position: absolute; bottom: 5px; right: 5px; font-size: 20px; color: green; display: none;">✓</span></div><div class="event-card" id="event-42" onclick="highlightEvent(42, &quot;2024-10-04&quot;)" data-event-color="#FF33FF" style="border-color: rgb(255, 51, 255); border-width: 6px;"><strong>Client:</strong> Theater On The Lake<br><strong>Location:</strong> Fullerton<br><div class="staff-rows" id="staff-rows-42"><div class="staff-row" id="staff-row-42-0"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-42-1"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-42-2"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-42-3"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-42-4"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-42-5"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-42-6"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-42-7"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-42-8"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-42-9"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-42-10"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div><div class="staff-row" id="staff-row-42-11"><input type="text" class="form-control form-control-sm start-time" placeholder="Start Time"><input type="text" class="form-control form-control-sm employee-name ui-autocomplete-input" placeholder="Employee Name" autocomplete="off"></div></div><div class="event-footer"><button class="btn btn-primary btn-sm" onclick="addEmployee(42)">Add</button><button class="btn btn-danger btn-sm" onclick="deleteEmployee(42)">Delete</button><button class="btn btn-success btn-sm" onclick="saveEvent(42)">Save</button></div><span class="event-checkmark" style="position: absolute; bottom: 5px; right: 5px; font-size: 20px; color: green; display: none;">✓</span></div></div><div class="day-column"><div class="day-header">Saturday 10/5</div></div><div class="day-column"><div class="day-header">Sunday 10/6</div></div><div class="day-column"><div class="day-header">Monday 10/7</div></div><div class="day-column"><div class="day-header">Tuesday 10/8</div></div>        </div>
+    </div>
+
+    <!-- Available Employees Section -->
+    <div id="available-employees" class="available-employees" style="display: none;">
+        <h3>Available Employees</h3>
+        <div class="employee-grid" id="employee-grid"><div class="employee-box" id="employee-5">Anthony Mariani (Available after 5:00 PM)</div></div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    var availableEmployees = [];
+    var assignedEmployees = {};
+    const distinctColors = [
+        '#FF5733', '#33FF57', '#3357FF', '#FF33FF', '#33FFFF', '#FFBD33', '#C70039', '#900C3F',
+        '#581845', '#FFC300', '#DAF7A6', '#28B463', '#1F618D', '#F39C12', '#16A085', '#8E44AD',
+        '#2ECC71', '#E74C3C', '#3498DB', '#D35400'
+    ];
+
+    function loadAvailableEmployees(date) {
+        $.post('get_available_employees.php', {
+            date: date
+        }, function(response) {
+            try {
+                availableEmployees = JSON.parse(response);
+                console.log('Available employees:', availableEmployees);
+                updateAvailableEmployeesUI(availableEmployees);
+                if (availableEmployees.length > 0) {
+                    initializeAutocomplete();
+                } else {
+                    console.warn("No available employees data to initialize autocomplete.");
+                }
+            } catch (e) {
+                console.error("Failed to parse available employees data.", e);
+            }
+        }).fail(function() {
+            alert('Failed to load available employees.');
+        });
+    }
+
+    function updateAvailableEmployeesUI(employees) {
+        var employeeGrid = document.getElementById('employee-grid');
+        employeeGrid.innerHTML = '';
+
+        employees.forEach(function(employee) {
+            var employeeBox = document.createElement('div');
+            employeeBox.classList.add('employee-box');
+            employeeBox.id = `employee-${employee.id}`;
+            employeeBox.textContent = `${employee.first_name} ${employee.last_name} (${employee.availability})`;
+
+            if (assignedEmployees[employee.id]) {
+                assignedEmployees[employee.id].forEach(eventColor => {
+                    var dot = document.createElement('span');
+                    dot.style.backgroundColor = eventColor;
+                    dot.style.width = '10px';
+                    dot.style.height = '10px';
+                    dot.style.display = 'inline-block';
+                    dot.style.borderRadius = '50%';
+                    dot.style.marginLeft = '5px';
+                    employeeBox.appendChild(dot);
+                });
+            }
+
+            employeeGrid.appendChild(employeeBox);
+        });
+
+        document.getElementById('available-employees').style.display = 'block';
+    }
+
+    function initializeAutocomplete() {
+        console.log('Initializing autocomplete for all employee-name fields');
+        $('.employee-name').each(function() {
+            if (!$(this).data('ui-autocomplete')) {
+                $(this).autocomplete({
+                    source: availableEmployees.map(emp => `${emp.first_name} ${emp.last_name}`),
+                    select: function(event, ui) {
+                        var selectedName = ui.item.value;
+                        $(this).val(selectedName);
+                        var employeeId = findEmployeeId(selectedName);
+                        $(this).data('employee-id', employeeId);
+                        assignEmployeeToEvent($(this).closest('.event-card').attr('id'), employeeId);
+                    }
+                });
+            }
+        });
+    }
+
+    function findEmployeeId(name) {
+        for (var i = 0; i < availableEmployees.length; i++) {
+            var fullName = `${availableEmployees[i].first_name} ${availableEmployees[i].last_name}`;
+            if (fullName === name) {
+                return availableEmployees[i].id;
+            }
+        }
+        return null;
+    }
+
+    function assignEmployeeToEvent(eventId, employeeId) {
+        if (!employeeId) return;
+
+        var eventCard = document.getElementById(eventId);
+        var eventColor = eventCard ? eventCard.getAttribute('data-event-color') : '#000';
+
+        if (!assignedEmployees[employeeId]) {
+            assignedEmployees[employeeId] = [];
+        }
+
+        if (!assignedEmployees[employeeId].includes(eventColor)) {
+            assignedEmployees[employeeId].push(eventColor);
+        }
+
+        updateAvailableEmployeesUI(availableEmployees);
+    }
+
+    window.highlightEvent = function(eventId, eventDate) {
+        document.querySelectorAll('.event-card').forEach(function(card) {
+            var checkmark = card.querySelector('.event-checkmark');
+            if (checkmark) checkmark.style.display = 'none';
+        });
+
+        var eventCard = document.getElementById(`event-${eventId}`);
+        if (eventCard) {
+            var checkmark = eventCard.querySelector('.event-checkmark');
+            if (checkmark) checkmark.style.display = 'block';
+        }
+
+        loadAvailableEmployees(eventDate);
+    };
+
+    window.addEmployee = function(eventId) {
+        var staffRows = document.getElementById(`staff-rows-${eventId}`);
+        var newIndex = staffRows.children.length;
+        var newStaffRow = document.createElement('div');
+        newStaffRow.classList.add('staff-row');
+        newStaffRow.id = `staff-row-${eventId}-${newIndex}`;
+        newStaffRow.innerHTML = `
+            <input type='text' class='form-control form-control-sm start-time me-2' placeholder='Start Time'>
+            <input type='text' class='form-control form-control-sm employee-name' placeholder='Employee Name'>
+        `;
+        staffRows.appendChild(newStaffRow);
+
+        initializeAutocomplete();
+    };
+
+    $('.event-card').each(function(index) {
+        var color = distinctColors[index % distinctColors.length];
+        $(this).css('border-color', color);
+        $(this).css('border-width', '6px');
+        $(this).attr('data-event-color', color);
+
+        $(this).append(`<span class='event-checkmark' style='position: absolute; bottom: 5px; right: 5px; font-size: 20px; color: green; display: none;'>&#10003;</span>`);
+    });
+
+    loadAvailableEmployees('2024-10-02');
+    setTimeout(initializeAutocomplete, 500);
+
+    document.addEventListener('click', function(event) {
+        if (
+            !event.target.closest('.event-card') &&
+            !$(event.target).closest('.ui-autocomplete').length &&
+            !$(event.target).hasClass('ui-autocomplete-input')
+        ) {
+            document.querySelectorAll('.event-card').forEach(function(card) {
+                var checkmark = card.querySelector('.event-checkmark');
+                if (checkmark) checkmark.style.display = 'none';
+            });
+            document.getElementById('available-employees').style.display = 'none';
+        }
+    });
+});
+</script>
+
+
+
+<ul id="ui-id-1" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-2" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-3" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-4" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-5" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-6" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-7" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-8" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-9" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-10" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-11" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-12" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-13" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-14" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-15" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-16" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-17" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-18" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-19" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-20" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-21" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-22" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-23" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-24" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-25" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-26" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-27" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-28" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-29" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-30" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-31" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-32" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-33" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-34" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div><ul id="ui-id-35" tabindex="0" class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" style="display: none;"></ul><div role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></div></body></html>

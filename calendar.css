@@ -1,0 +1,140 @@
+/* Custom styles for the calendar */
+.container {
+    max-width: 1000px; /* Increased the max-width to size up the calendar */
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+#calendar {
+    max-width: 1000px; /* Increased the max-width to size up the calendar */
+    margin: 0 auto;
+}
+
+/* Style for calendar days (date cells) */
+.fc-daygrid-day-number {
+    color: black;      /* Set the color to black */
+    font-weight: bold; /* Make the text bold */
+    text-decoration: none !important; /* Remove underline */
+}
+
+/* Ensure text in calendar events wraps correctly */
+.fc-event-title {
+    white-space: normal;
+    line-height: 1.2em;
+}
+
+/* Adjust event text color based on background */
+.fc-event.fc-bg-yellow .fc-event-title {
+    color: black; /* Black text for yellow background */
+}
+
+/* Styles for the modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 60px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+    border-radius: 8px;
+    text-align: center; /* Center text in the modal */
+}
+
+.modal-content label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+.modal-content input[type="time"],
+.modal-content select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    margin-right: -10px; /* Adjusted position to the far right */
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-content button {
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.modal-content button:hover {
+    background-color: #218838;
+}
+
+/* Styles for the "All Day" option */
+.all-day-option {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the checkbox and label */
+    margin-bottom: 20px;
+}
+
+.all-day-option input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+/* Add some margin to the bottom of the container for the submit button */
+#submitAvailability {
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#submitAvailability:hover {
+    background-color: #0056b3;
+}
