@@ -285,22 +285,60 @@ $(document).ready(function() {
 }
 
 
-    function initializeAutocomplete() {
-        $('.employee-name').each(function() {
-            if (!$(this).data('ui-autocomplete')) {
-                $(this).autocomplete({
-                    source: availableEmployees.map(emp => `${emp.first_name} ${emp.last_name}`),
-                    select: function(event, ui) {
-                        var selectedName = ui.item.value;
-                        $(this).val(selectedName);
-                        var employeeId = findEmployeeId(selectedName);
-                        $(this).data('employee-id', employeeId);
-                        assignEmployeeToEvent($(this).closest('.event-card').attr('id'), employeeId);
-                    }
-                });
-            }
-        });
+function initializeAutocomplete() {
+    $('.employee-name').each(function() {
+        if (!$(this).data('ui-autocomplete')) {
+            $(this).autocomplete({
+                source: availableEmployees.map(emp => `${emp.first_name} ${emp.last_name}`),
+                select: function(event, ui) {
+                    var selectedName = ui.item.value;
+                    $(this).val(selectedName);
+                    var employeeId = findEmployeeId(selectedName);
+                    $(this).data('employee-id', employeeId);
+                    assignEmployeeToEvent($(this).closest('.event-card').attr('id'), employeeId);
+                }
+            });
+
+            // Add listener for real-time changes
+            $(this).on('input', function() {
+                var employeeName = $(this).val();
+                var previousEmployeeId = $(this).data('employee-id');
+                
+                // If the input is cleared, remove the employee assignment
+                if (!employeeName && previousEmployeeId) {
+                    $(this).removeData('employee-id');
+                    var eventCard = $(this).closest('.event-card');
+                    var eventId = eventCard.attr('id');
+                    var eventDate = eventCard.data('event-date');
+                    removeEmployeeFromEvent(eventId, previousEmployeeId, eventDate);
+                }
+            });
+        }
+    });
+}
+
+function removeEmployeeFromEvent(eventId, employeeId, eventDate) {
+    if (assignedEmployees[eventDate] && assignedEmployees[eventDate][employeeId]) {
+        // Remove the event color from the assigned employee's list
+        assignedEmployees[eventDate][employeeId] = assignedEmployees[eventDate][employeeId].filter(
+            color => color !== $(`#${eventId}`).data('event-color')
+        );
+
+        // If no more events are assigned to that employee for the selected date, remove the entry
+        if (assignedEmployees[eventDate][employeeId].length === 0) {
+            delete assignedEmployees[eventDate][employeeId];
+        }
+
+        // If no more employees are assigned on that date, remove the date entry
+        if (Object.keys(assignedEmployees[eventDate]).length === 0) {
+            delete assignedEmployees[eventDate];
+        }
+
+        // Update the UI
+        updateAvailableEmployeesUI(availableEmployees);
     }
+}
+
 
     function findEmployeeId(name) {
         for (var i = 0; i < availableEmployees.length; i++) {

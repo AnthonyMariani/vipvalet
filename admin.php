@@ -1,33 +1,3 @@
-<?php
-session_start();
-include 'db.php';
-
-// Check if the user is logged in and is an admin
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    header("Location: index.php");
-    exit();
-}
-
-// Function to generate weeks starting from a specific date
-function generateWeeks($startDate, $weeksToGenerate) {
-    $weeks = [];
-    for ($i = 0; $i < $weeksToGenerate; $i++) {
-        $weekStart = date('Y-m-d', strtotime("$startDate +$i week"));
-        $weekEnd = date('Y-m-d', strtotime("$weekStart +6 days"));
-        $weeks[] = [
-            'start' => $weekStart,
-            'end' => $weekEnd,
-            'display' => "Week of " . date('n/j', strtotime($weekStart)) . " - " . date('n/j', strtotime($weekEnd))
-        ];
-    }
-    return $weeks;
-}
-
-// Generate the weeks starting from the most recent Wednesday
-$recentWednesday = date('Y-m-d', strtotime('last Wednesday'));
-$weeks = generateWeeks($recentWednesday, 10); // Generates the next 10 weeks
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -79,23 +49,24 @@ $weeks = generateWeeks($recentWednesday, 10); // Generates the next 10 weeks
                 </div>
             </div>
 
-            <!-- Manage Schedule Option -->
+            <!-- Manage Events Option -->
             <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Manage Events</h5>
+                        <p class="card-text">Create, view, and update upcoming events.</p>
+                        <a href="manage_events.php" class="btn btn-secondary">Go to Manage Events</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manage Schedule Option -->
+            <div class="col-md-4 mt-4 mt-md-0">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Manage Schedule</h5>
                         <p class="card-text">View and manage the weekly schedule for events.</p>
                         <a href="manage_schedule.php" class="btn btn-secondary">Go to Manage Schedule</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">View Reports</h5>
-                        <p class="card-text">View detailed reports on system usage.</p>
-                        <a href="view_reports.php" class="btn btn-secondary">Go to Reports</a>
                     </div>
                 </div>
             </div>

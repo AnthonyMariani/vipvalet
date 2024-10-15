@@ -36,7 +36,7 @@ $weeklyEvents = getWeeklyEvents($currentDate);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Weekly Events</title>
+    <title>Manage Events</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="global.css">
     <style>
@@ -65,9 +65,18 @@ $weeklyEvents = getWeeklyEvents($currentDate);
     </style>
 </head>
 <body>
+
 <div class="container mt-5">
-    <h1 class="text-center">Manage Weekly Events</h1>
-    <button class="btn btn-success mb-4" id="toggle-add-event-btn" onclick="toggleAddEventForm()">Add New Event</button>
+<div class="container mt-5 mb-4 py-3 d-flex justify-content-between align-items-center">
+    <a href="admin.php" class="btn btn-secondary">&larr; Back to Admin Dashboard</a>
+    <h1 class="text-center flex-grow-1">Manage Weekly Events</h1>
+    <div>
+        <button class="btn btn-primary me-2" onclick="navigateWeek(-1)">Previous Week</button>
+        <button class="btn btn-primary" onclick="navigateWeek(1)">Next Week</button>
+    </div>
+</div>
+
+
 
     <!-- Add Event Form -->
     <div id="add-event-form" class="card p-4 mb-4">
@@ -145,10 +154,6 @@ $weeklyEvents = getWeeklyEvents($currentDate);
         }
         ?>
     </div>
-
-    <!-- Buttons to navigate weeks -->
-    <button class="btn btn-primary mt-4" onclick="navigateWeek(-1)">Previous Week</button>
-    <button class="btn btn-primary mt-4" onclick="navigateWeek(1)">Next Week</button>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -1,10 +1,6 @@
 <?php
 session_start(); // Start the session
 
-// Open a file for logging
-$log_file = 'session_log.txt';
-$log_handle = fopen($log_file, 'a');
-
 // Log session details
 fwrite($log_handle, "Session Check - " . date('Y-m-d H:i:s') . "\n");
 fwrite($log_handle, "Session Data: " . print_r($_SESSION, true) . "\n");
