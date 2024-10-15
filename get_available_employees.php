@@ -27,23 +27,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $availableEmployees = [];
     while ($row = $result->fetch_assoc()) {
-        $availabilityDetail = '';
-
-        // Check the availability condition
-        if ($row['all_day'] == 1) {
-            $availabilityDetail = "Available all day";
-        } elseif ($row['time_type'] === 'after') {
-            $availabilityDetail = "Available after " . date("g:i A", strtotime($row['time']));
-        } elseif ($row['time_type'] === 'before') {
-            $availabilityDetail = "Available before " . date("g:i A", strtotime($row['time']));
-        }
-
-        // Add employee information to the array, including availability details
+        // Add employee information to the array, including the date they are available
         $availableEmployees[] = [
             'id' => $row['id'],
             'first_name' => $row['first_name'],
             'last_name' => $row['last_name'],
-            'availability' => $availabilityDetail
+            'available_date' => $date, // Add available date for filtering in JavaScript
+            'availability_detail' => $row['all_day'] == 1 ? 'All Day' : ($row['time_type'] . ' ' . date("g:i A", strtotime($row['time'])))
         ];
     }
 

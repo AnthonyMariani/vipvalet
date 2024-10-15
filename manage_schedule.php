@@ -227,26 +227,44 @@ $(document).ready(function() {
     var currentEventDate = null;
 
     function loadAvailableEmployees(date) {
-        $.post('get_available_employees.php', {
-            date: date
-        }, function(response) {
-            try {
-                availableEmployees = JSON.parse(response);
-                updateAvailableEmployeesUI(availableEmployees);
-                if (availableEmployees.length > 0) {
-                    initializeAutocomplete();
-                } else {
-                    console.warn("No available employees data to initialize autocomplete.");
-                }
-            } catch (e) {
-                console.error("Failed to parse available employees data.", e);
-            }
-        }).fail(function() {
-            alert('Failed to load available employees.');
-        });
-    }
+    return $.post('get_available_employees.php', { date: date }, function(response) {
+        try {
+            availableEmployees = JSON.parse(response);
 
-    function updateAvailableEmployeesUI(employees) {
+            // Assuming 'availability' gives specific time details for the day (like all day, after a specific time, etc.)
+            // Set 'availabilityDates' to contain the current date for simplicity
+            availableEmployees.forEach(function(emp) {
+                emp.availabilityDates = [date];  // Only add current event date as available
+            });
+
+            console.log("Available Employees:", availableEmployees);
+
+            // Initialize autocomplete if there are available employees
+            if (availableEmployees.length > 0) {
+                initializeAutocomplete();
+            } else {
+                console.warn("No available employees data to initialize autocomplete.");
+            }
+
+            // Update the UI with the available employees list
+            updateAvailableEmployeesUI(availableEmployees);
+
+        } catch (e) {
+            console.error("Failed to parse available employees data.", e);
+        }
+    }).fail(function() {
+        alert('Failed to load available employees.');
+    });
+}
+
+
+
+
+
+
+
+
+function updateAvailableEmployeesUI(employees) {
     var employeeGrid = document.getElementById('employee-grid');
     employeeGrid.innerHTML = '';
 
@@ -255,10 +273,11 @@ $(document).ready(function() {
         employeeBox.classList.add('employee-box');
         employeeBox.id = `employee-${employee.id}`;
 
-        // Determine availability text, only add it if not available all day
-        var availabilityText = employee.availability && employee.availability !== "Available all day"
-            ? ` (${employee.availability})`
-            : "";
+        // Determine availability text
+        let availabilityText = '';
+        if (employee.availability_detail && employee.availability_detail !== "All Day") {
+            availabilityText = ` (${employee.availability_detail})`; // Add specific availability, e.g., "Available after 5PM"
+        }
 
         // Set employee box content with name and availability text (if applicable)
         employeeBox.textContent = `${employee.first_name} ${employee.last_name}${availabilityText}`;
@@ -285,37 +304,76 @@ $(document).ready(function() {
 }
 
 
+
+
+
+
 function initializeAutocomplete() {
     $('.employee-name').each(function() {
-        if (!$(this).data('ui-autocomplete')) {
-            $(this).autocomplete({
-                source: availableEmployees.map(emp => `${emp.first_name} ${emp.last_name}`),
-                select: function(event, ui) {
-                    var selectedName = ui.item.value;
-                    $(this).val(selectedName);
-                    var employeeId = findEmployeeId(selectedName);
-                    $(this).data('employee-id', employeeId);
-                    assignEmployeeToEvent($(this).closest('.event-card').attr('id'), employeeId);
-                }
-            });
+        var $inputField = $(this);
 
-            // Add listener for real-time changes
-            $(this).on('input', function() {
-                var employeeName = $(this).val();
-                var previousEmployeeId = $(this).data('employee-id');
-                
-                // If the input is cleared, remove the employee assignment
-                if (!employeeName && previousEmployeeId) {
-                    $(this).removeData('employee-id');
-                    var eventCard = $(this).closest('.event-card');
-                    var eventId = eventCard.attr('id');
-                    var eventDate = eventCard.data('event-date');
-                    removeEmployeeFromEvent(eventId, previousEmployeeId, eventDate);
-                }
-            });
+        // Destroy any existing autocomplete instance (if it exists)
+        if ($inputField.data('ui-autocomplete')) {
+            $inputField.autocomplete('destroy');
         }
+
+        // Initialize autocomplete with filtered employee names based on availability
+        $inputField.autocomplete({
+            source: function(request, response) {
+                // Get the current event date from the event card
+                var eventCard = $inputField.closest('.event-card');
+                var eventDate = eventCard.data('event-date');
+
+                // Filter available employees based on the selected event date
+                var filteredEmployees = availableEmployees.filter(function(emp) {
+                    // Only include employees who are available on the specified event date
+                    return emp.availabilityDates.includes(eventDate);
+                }).map(function(emp) {
+                    // Include availability details only if not available all day
+                    var availabilityDetail = emp.availability && emp.availability !== "Available all day"
+                        ? ` (${emp.availability})`
+                        : '';
+
+                    return {
+                        label: `${emp.first_name} ${emp.last_name}${availabilityDetail}`,
+                        value: `${emp.first_name} ${emp.last_name}`
+                    };
+                });
+
+                console.log("Filtered employees for event date", eventDate, ":", filteredEmployees);
+
+                // Provide filtered results to autocomplete
+                response(filteredEmployees);
+            },
+            select: function(event, ui) {
+                var selectedName = ui.item.value;
+                $inputField.val(selectedName);
+                var employeeId = findEmployeeId(selectedName);
+                $inputField.data('employee-id', employeeId);
+                assignEmployeeToEvent($inputField.closest('.event-card').attr('id'), employeeId);
+            }
+        });
+
+        // Add listener for real-time changes to remove dots if an employee is removed
+        $inputField.on('input', function() {
+            var employeeName = $inputField.val();
+            var previousEmployeeId = $inputField.data('employee-id');
+
+            // If the input is cleared, remove the employee assignment
+            if (!employeeName && previousEmployeeId) {
+                $inputField.removeData('employee-id');
+                var eventCard = $inputField.closest('.event-card');
+                var eventId = eventCard.attr('id');
+                var eventDate = eventCard.data('event-date');
+                removeEmployeeFromEvent(eventId, previousEmployeeId, eventDate);
+            }
+        });
     });
 }
+
+
+
+
 
 function removeEmployeeFromEvent(eventId, employeeId, eventDate) {
     if (assignedEmployees[eventDate] && assignedEmployees[eventDate][employeeId]) {
@@ -375,32 +433,33 @@ function removeEmployeeFromEvent(eventId, employeeId, eventDate) {
 
 
     window.highlightEvent = function(eventId, eventDate) {
-        currentEventDate = eventDate;
-        document.querySelectorAll('.event-card').forEach(function(card) {
-            card.classList.remove('highlighted-event');
-        });
-
-        var eventCard = document.getElementById(`event-${eventId}`);
-        if (eventCard) {
-            eventCard.classList.add('highlighted-event');
-        }
-
-        loadAvailableEmployees(eventDate);
-    };
-
-    window.highlightEvent = function(eventId, eventDate) {
     currentEventDate = eventDate;
+
+    // Remove highlight from all events
     document.querySelectorAll('.event-card').forEach(function(card) {
         card.classList.remove('highlighted-event');
     });
 
+    // Highlight the selected event
     var eventCard = document.getElementById(`event-${eventId}`);
     if (eventCard) {
         eventCard.classList.add('highlighted-event');
     }
 
-    loadAvailableEmployees(eventDate);
+    // Load available employees for the selected event's date
+    loadAvailableEmployees(eventDate)
+        .then(() => {
+            console.log("Employees loaded successfully for event date:", eventDate);
+        })
+        .catch(() => {
+            console.error("Error loading available employees.");
+        });
 };
+
+
+
+
+
 
 window.addEmployee = function(eventId) {
     var staffRows = document.getElementById(`staff-rows-${eventId}`);
@@ -424,6 +483,51 @@ window.deleteEmployee = function(eventId) {
         staffRows.removeChild(staffRows.lastChild);
     }
 };
+
+window.saveAllEvents = function() {
+    // Array to collect all event assignments data
+    let assignments = [];
+
+    // Iterate through each event-card on the page
+    $('.event-card').each(function() {
+        let eventId = $(this).attr('id').replace('event-', '');
+
+        // Iterate through each staff-row under this event-card
+        $(this).find('.staff-row').each(function() {
+            let employeeId = $(this).find('.employee-name').data('employee-id');
+            let startTime = $(this).find('.start-time').val();
+
+            // Only add the assignment if both event ID and employee ID are set
+            if (employeeId && eventId) {
+                assignments.push({
+                    event_id: parseInt(eventId),
+                    employee_id: parseInt(employeeId),
+                    start_time: startTime ? startTime : null // If start time is empty, set to null
+                });
+            }
+        });
+    });
+
+    // Log assignments to check correctness before sending
+    console.log("Collected Assignments:", assignments);
+
+    // Send the collected assignments to the server
+    $.ajax({
+        url: 'save_event_assignments.php',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(assignments),
+        success: function(response) {
+            console.log("Assignments saved successfully:", response);
+            alert("Schedule saved successfully!");
+        },
+        error: function(error) {
+            console.error("Error saving assignments:", error);
+            alert("Failed to save the schedule. Please try again.");
+        }
+    });
+}
+
 
 
 window.navigateWeek = function(offset) {
@@ -460,8 +564,6 @@ document.addEventListener('click', function(event) {
     }
 });
 
-loadAvailableEmployees('<?php echo $currentDate; ?>');
-setTimeout(initializeAutocomplete, 500);
 });
 
 
