@@ -10,10 +10,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 }
 
 // Function to get weekly events
+// Function to get weekly events with row count
 function getWeeklyEvents($startDate) {
     global $conn;
     $endDate = date('Y-m-d', strtotime($startDate . ' +6 days'));
-    $sql = "SELECT * FROM weekly_events WHERE event_date BETWEEN ? AND ? ORDER BY event_date";
+    $sql = "SELECT *, IFNULL(row_count, staff_needed) AS total_staff 
+            FROM weekly_events 
+            WHERE event_date BETWEEN ? AND ? 
+            ORDER BY event_date";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ss", $startDate, $endDate);
     $stmt->execute();
@@ -25,6 +29,7 @@ function getWeeklyEvents($startDate) {
     $stmt->close();
     return $events;
 }
+
 
 // Get the start date of the week (Wednesday)
 $currentDate = isset($_GET['start_date']) ? $_GET['start_date'] : date('Y-m-d', strtotime('last Wednesday'));
@@ -183,15 +188,17 @@ $weeklyEvents = getWeeklyEvents($currentDate);
                         echo "<strong>Client:</strong> " . htmlspecialchars($event['client']) . "<br>";
                         echo "<strong>Location:</strong> " . htmlspecialchars($event['location']) . "<br>";
 
-                        // Staff rows
-                        echo "<div class='staff-rows' id='staff-rows-{$event['id']}'>";
-                        for ($i = 0; $i < (int)$event['staff_needed']; $i++) {
-                            echo "<div class='staff-row' id='staff-row-{$event['id']}-$i'>";
-                            echo "<input type='text' class='form-control form-control-sm start-time' placeholder='Start Time'>";
-                            echo "<input type='text' class='form-control form-control-sm employee-name' placeholder='Employee Name'>";
-                            echo "</div>";
-                        }
-                        echo "</div>";
+// Staff rows
+echo "<div class='staff-rows' id='staff-rows-{$event['id']}'>";
+$totalStaff = (int)$event['total_staff'];
+for ($i = 0; $i < $totalStaff; $i++) {
+    echo "<div class='staff-row' id='staff-row-{$event['id']}-$i'>";
+    echo "<input type='text' class='form-control form-control-sm start-time' placeholder='Start Time'>";
+    echo "<input type='text' class='form-control form-control-sm employee-name' placeholder='Employee Name'>";
+    echo "</div>";
+}
+echo "</div>";
+
 
                         // Add, Delete, buttons for employees
                         echo "<div class='event-footer'>";
@@ -464,6 +471,8 @@ function removeEmployeeFromEvent(eventId, employeeId, eventDate) {
 window.addEmployee = function(eventId) {
     var staffRows = document.getElementById(`staff-rows-${eventId}`);
     var newIndex = staffRows.children.length;
+
+    // Create a new employee row
     var newStaffRow = document.createElement('div');
     newStaffRow.classList.add('staff-row');
     newStaffRow.id = `staff-row-${eventId}-${newIndex}`;
@@ -473,16 +482,42 @@ window.addEmployee = function(eventId) {
     `;
     staffRows.appendChild(newStaffRow);
 
+    // Initialize autocomplete for the new row
     initializeAutocomplete();
+
+    // Update the row count in the database
+    $.post('update_row_count.php', {
+        event_id: eventId,
+        row_count: newIndex + 1 // Add the new row to the current count
+    })
+    .done(function() {
+        console.log("Row count updated successfully.");
+    })
+    .fail(function() {
+        console.error("Failed to update row count.");
+    });
 };
 
+
 window.deleteEmployee = function(eventId) {
-    // Remove the last employee row
     var staffRows = document.getElementById(`staff-rows-${eventId}`);
     if (staffRows && staffRows.children.length > 0) {
         staffRows.removeChild(staffRows.lastChild);
+
+        // Update the row count in the database
+        $.post('update_row_count.php', {
+            event_id: eventId,
+            row_count: staffRows.children.length // Update with the new count after deletion
+        })
+        .done(function() {
+            console.log("Row count updated successfully.");
+        })
+        .fail(function() {
+            console.error("Failed to update row count.");
+        });
     }
 };
+
 
 window.saveAllEvents = function() {
     // Array to collect all event assignments data
